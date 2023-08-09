@@ -1,0 +1,214 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="mt-5 mb-3">
+	<div class="row">
+		<div class="col-md-10">
+			<h4 class="card-title pb-0 fs-4">Bienvenido(a), {{ user.full_name }}</h4>
+		</div>
+		<div class="col-md-2 text-right">
+			<button 
+				type="button"
+				data-bs-toggle="modal"
+				data-bs-target="#modalCreditRequest" 
+				class="btn btn-warning"
+			>
+				Solicitar Crédito
+			</button>
+		</div>
+	</div>
+</div>
+
+{% if not credit %}
+<div class="">
+	<section class="flex items-center justify-center h-screen">
+		<h6 class="text-2xl">Actualmente no tiene créditos vigentes.</h6>
+	</section>
+</div>
+{% else %}
+<div class="flex-grow md:block md:overflow-y-auto">
+	<section class="flex items-center justify-center h-screen mb-2">
+		<h6 class="text-2xl">A continuación encontrará la información de sus créditos vigentes.</h6>
+	</section>
+
+	{% for item in credit %}
+		<div class="mb-4">
+			<table class="table">      
+				<tbody class="bg-white text-gray-800">			
+					<tr class="text-sm">
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Valor del Crédito
+						</td>
+						<td class="px-2 py-1 border">{{ item.amount }}</td>
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Saldo Actual
+						</td>    
+						<td class="px-2 py-1 border">{{ item.current_balance }}</td>  
+					</tr>
+					<tr class="text-sm">
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							N° Cuotas
+						</td>     
+						<td class="px-2 py-1 border">{{ item.installment }}</td>
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Valor Cuota
+						</td>  
+						<td class="px-2 py-1 border">{{ item.amount_installment }}</td>
+					</tr>  
+					<tr class="text-sm">
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Cuotas Pagas
+						</td>     
+						<td class="px-2 py-1 border">{{ item.paid_installment  }}</td>
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Cuotas Adelantadas
+						</td>     
+						<td class="px-2 py-1 border">{{ item.advanced_installment }}</td>
+					</tr>   
+					<tr class="text-sm">					
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Cuotas en Mora
+						</td>     
+						<td class="px-2 py-1 border">{{ item.delay_installment }}</td>
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Fecha Desembolso
+						</td>   
+						<td class="px-2 py-1 border">
+							{{ item.created_at_date }}
+						</td>					
+					</tr>
+					<tr class="text-sm">										
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Valor Último Abono
+						</td>  
+						<td class="px-2 py-1 border">
+							{{ item.last_payment_amount|default_if_none:'' }}
+						</td> 
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Fecha del Último Abono
+						</td>  
+						<td class="px-2 py-1 border">
+							{{ item.last_payment|default_if_none:'' }}
+						</td> 
+					</tr> 
+					<tr class="text-sm">
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Fecha de Vencimiento
+						</td>   
+						<td class="px-2 py-1 border">{{ item.due_date }}</td>
+						<td class="px-2 py-1 border font-semibold bg-dark text-white">
+							Abonos
+						</td>  
+						<td class="px-2 py-1 border">  
+							<a
+								href="#" 
+								class="link-primary" 
+								data-bs-toggle="modal" 
+								data-bs-target="#modal"
+								onclick="getPaymentCredit('{{SERVER}}', {{item.id}})"
+							>
+								Clic aquí
+							</button>
+						</td> 
+					</tr>              
+				</tbody>  
+			</table> 
+		</div>
+	{% endfor %}
+</div>
+{% endif %}
+	
+<div class="modal fade" id="modalCreditRequest" tabindex="-1" aria-hidden="true" style="display: none;">
+	<form action="{% url 'request_credit' %}" method="post">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h5 class="modal-title">Solicitud de Crédito</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row mb-2">
+						<div class="col-sm-12 text-justify">
+							Revise su número telefónico y modifíquelo si es necesario, luego presione el botón Enviar.
+						</div>
+					</div>
+					<div>		
+						{% csrf_token %}			
+						<input type="number" name="mobile_number" class="form-control" value="{{user.mobile_number}}" required>					
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-primary">Enviar</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Abonos realizados al crédito</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<h5 class="d-none" id="creditWithoutPayment">No existen pagos para el crédito.</h5>
+
+				<div class="container text-center">
+					<table class="table table-sm" id="tableHistorialPayment">
+						<thead id="theadHistorialPayment">						
+						</thead>
+						<tbody id="tbodyHistorialPayment">							 
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% if not messages %}
+<div class="modal fade" id="modalCompanyMessage" tabindex="-1" aria-hidden="true">
+	<form action="{% url 'request_credit' %}" method="post">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h5 class="modal-title">Información importante</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="row mb-2">
+						<div class="col-sm-12 text-justify">
+							Recuerde que no se hace negociaciones con el cobrador y que usted es el único responsable del crédito otorgado.
+							<br><br>
+							En caso de dudas, inquietudes o novedades que quiera reportar, comuníquese al teléfono:
+						</div>
+					</div>
+					<div>		
+						<p class="text-center">
+							<h6 class="text-center text-2xl"><strong>{{user.company.mobile_phone}}</strong></h6>				
+						</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/payment_credit.js' %}" type="text/javascript"></script>
+{% endblock %}

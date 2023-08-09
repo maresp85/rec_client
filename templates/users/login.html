@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>TD Electrica 2023</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="author" content="">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'bootstrap-5/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap-icons-5/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'css/style-light.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+	</head>
+
+	<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg bg-black">
+      <div class="container-fluid">
+        <!--<a class="navbar-brand" href="#">  
+          <img src="{% static 'images/logo.png' %}" width="128">
+        </a>-->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">  
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>      
+        </div>
+      </div>
+    </nav>   
+
+    <div class="container align-items-center login-form">
+      <div class="row justify-content-center">
+
+        <div class="col-lg-4 col-md-6">          
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="pt-2 pb-2">
+                <h6 class="card-title text-center pb-0 fs-4">INICIAR SESIÓN</h6>                                      
+              </div>
+              <form id="id_form_login" class="row g-3" action="" method="post">
+                  
+                  {% csrf_token %}  
+                  {% if form.non_field_errors %}
+                  <div class="text-danger fs-7">
+                      {{ form.non_field_errors.as_text }}
+                  </div>
+                  {% endif %}   
+                                    
+                  <div class="col-12">
+                    <label for="document_number" class="form-label">Número de documento</label>
+                    <input 
+                      type="number"
+                      class="w-100 form-control"	
+                      name="document_number"
+                      placeholder=""									
+                      required									 
+                    />
+                    {% if form.document_number.errors %}
+                    <span class="text-danger fs-7 mt-1">{{ form.document_number.errors }}</span>
+                    {% endif %}
+                  </div>
+                                             
+                  <div class="col-12"> 
+                      <button id="id_submit" class="btn btn-primary w-100 text-dark" type="submit">
+                        <span id="id_submit_label">Ingresar</span>     
+                      </button>
+                  </div>
+
+              </form>
+            </div>
+          </div>                            
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="mt-auto">
+      <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-3 border-top">
+
+        <div class="col mb-3">
+    
+        </div>
+
+        <div class="col mb-3">
+          <!--<a class="navbar-brand" href="#">  
+            <img src="{% static 'images/logo2.png' %}" width="196">
+          </a>-->
+        </div>
+    
+        <div class="col mb-3">
+    
+        </div>  
+    
+        <div class="col mb-3">
+          <!--<h5>Contáctanos</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Teléfono: 51951541838</a></li>
+            <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Email: soporte@digitalrec.info</a></li> 
+          </ul>-->
+        </div>
+    
+        <div class="col mb-3">
+
+        </div>
+
+        <div class="col mb-3">
+          
+          
+        </div>
+
+      </footer>
+    </div>
+
+		<script src="{% static 'bootstrap-5/js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/tinymce.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/main.js' %}" type="text/javascript"></script>
+
+	</body>
+</html>

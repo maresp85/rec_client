@@ -1,0 +1,137 @@
+{% extends 'base/base.html' %}
+
+{% load static widget_tweaks %}
+
+{% block content %}
+
+<div class="">
+
+    <div class="mt-5 mb-3">
+        <div class="row">
+            <div class="col-md-10">
+                <h4 class="card-title pb-0 fs-4">
+                    Ya que eres un cliente referido, diligencia los siguientes datos.
+                </h4>  
+            </div>          
+        </div>
+    </div>
+    <hr class="mb-2">
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-6">             
+                <label for="first_name" class="block text-xs font-semibold text-gray-700">
+                    Nombre
+                </label>
+                <input 
+                    name="first_name"
+                    class="form-control"
+                    type="text"
+                    required
+                >
+                {% if form.first_name.errors %}
+                <span class="text-danger fs-7 mt-1">{{ form.first_name.errors }}</span>
+                {% endif %}
+            </div>
+            <div class="col-6"> 
+                <label for="last_name" class="block text-xs font-semibold text-gray-700">
+                    Apellidos
+                </label>
+                <input 
+                    name="last_name"
+                    class="form-control"
+                    type="text" 
+                    required
+                >
+                {% if form.last_name.errors %}
+                <span class="text-danger fs-7 mt-1">{{ form.last_name.errors }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-6">  
+                <label for="document_number" class="block text-xs font-semibold text-gray-700">
+                    D.N.I
+                </label>
+                <input            
+                    name="document_number"
+                    class="form-control"
+                    type="number"   
+                    required                 
+                >
+                {% if form.document_number.errors %}
+                <span class="text-danger fs-7 mt-1">{{ form.document_number.errors }}</span>         
+                {% endif %}
+            </div>     
+            <div class="col-6">               
+                <label for="mobile_number" class="block text-xs font-semibold text-gray-700">
+                    Número Celular
+                </label>
+                <input 
+                    name="mobile_number"
+                    class="form-control"
+                    type="number"             
+                    placeholder="" 
+                    required
+                >
+                {% if form.mobile_number.errors %}
+                <span class="text-danger fs-7 mt-1">{{ form.mobile_number.errors }}</span>
+                {% endif %}  
+            </div>          
+        </div>    
+
+        <div class="mt-2">
+            <label for="city" class="block text-xs font-semibold text-gray-700">
+                Ciudad
+            </label>
+            {% render_field form.city class+='form-select' %}
+            {% if form.city.errors %}
+            <span class="text-danger fs-7 mt-1">{{ form.city.errors }}</span>{% endif %}  
+        </div>   
+
+        <div class="mt-2">
+            <label for="address" class="block text-xs font-semibold text-gray-700">
+                Dirección Domicilio
+            </label>
+            <textarea 
+                class="form-control"
+                name="address"              
+                cols="20"
+                rows="1"   
+                required             
+            >
+            </textarea>
+            {% if form.address.errors %}
+            <span class="text-danger fs-7 mt-1">{{ form.address.errors }}</span>
+            {% endif %}  
+        </div>    
+        
+        <div class="mt-2">
+            <label for="address_payment" class="block text-xs font-semibold text-gray-700">
+                Dirección de Negocio
+            </label>
+            <textarea 
+                class="form-control"
+                name="address_payment"         
+                cols="20"
+                rows="1" 
+                required               
+            >
+            </textarea>
+            {% if form.address_payment.errors %}
+            <span class="text-danger fs-7 mt-1">{{ form.address_payment.errors }}</span>
+            {% endif %}  
+        </div>        
+            
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary text-dark">Continuar</button>
+        </div>
+      
+    </form>
+
+</div>
+
+{% endblock %}
