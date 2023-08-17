@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render
 
@@ -7,6 +8,9 @@ from app.utils import get_requests, post_requests
 
 
 def get_credit(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+    
     context = {}
     document_number = request.user.document_number
     url = f'{settings.REC_SERVER}/credit_client/{document_number}/'

@@ -66,21 +66,14 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'recaudos-clientes', 
-#        'USER': 'postgres', 
-#        'PASSWORD': 'Salesler0085.',
-#        'HOST': '127.0.0.1', 
-#        'PORT': '5432',
-#    }
-#}
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tarjeta_digital', 
+        'USER': 'postgres', 
+        'PASSWORD': 'Salesler0085.',
+        'HOST': '127.0.0.1', 
+        'PORT': '5432',
     }
 }
 
@@ -135,3 +128,5 @@ AUTH_USER_MODEL = 'users.User'
 
 REC_SERVER = 'https://digitalrec.info:8000'
 REC_TOKEN_SERVER = '9f7044aad3e4b7923aebe1c91caf25a55866f722'
+
+LOGOUT_REDIRECT_URL = 'login'
