@@ -32,7 +32,7 @@ class CreateUser:
             self._user.address = self._data['address']
             self._user.address_payment = self._data['address_payment']
             self._user.city = self._data['city'] if 'city' in self._data else None
-            self._user.created_from_server=self._created_from_server
+            self._user.created_from_server = self._created_from_server
             self._user.document_number = self._data['document_number'].strip()
             self._user.referred_code = self._referred_code if self._referred_code else None
             self._user.company = self._company

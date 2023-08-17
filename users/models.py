@@ -4,7 +4,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    client_id = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='cliente id')
+    client_id = models.IntegerField(blank=True, null=True, verbose_name='cliente id')
 
     first_name = models.CharField(max_length=128, verbose_name='nombre')
 
