@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from app.utils import get_requests
 
@@ -11,6 +12,7 @@ from users.models import Enterprise
 from users.usecases import CreateUser
 
 
+@csrf_exempt
 def custom_login(request):
     if request.POST:       
         form = CustomLoginForm(request.POST)       
