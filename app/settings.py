@@ -15,12 +15,14 @@ SECRET_KEY = 'django-insecure--y^=y)0&af!pcfsfgwyt%(*yq57t04o889a%m=+fix*y98@z75
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 PROJECT_APPS = [
     'clients',
     'users',
 ]
+
+CSRF_TRUSTED_ORIGINS = ['http://tdelectrica.info','http://*.127.0.0.1']
 
 INSTALLED_APPS = PROJECT_APPS + [
     'django.contrib.admin',
@@ -69,13 +71,27 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+<<<<<<< HEAD
+        'NAME': 'tarjeta_digital',
+        'USER': 'postgres',
+        'PASSWORD': 'Salesler0085.',
+        'HOST': '127.0.0.1',
+=======
         'NAME': 'tarjeta_digital', 
         'USER': 'postgres', 
         'PASSWORD': 'Salesler0085.',
         'HOST': '127.0.0.1', 
+>>>>>>> 44d6f2a5a4753c657f2bc2c93b972f14f37060f9
         'PORT': '5432',
     }
 }
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -129,4 +145,8 @@ AUTH_USER_MODEL = 'users.User'
 REC_SERVER = 'https://digitalrec.info:8000'
 REC_TOKEN_SERVER = '9f7044aad3e4b7923aebe1c91caf25a55866f722'
 
+<<<<<<< HEAD
 LOGOUT_REDIRECT_URL = 'login'
+=======
+LOGOUT_REDIRECT_URL = 'login'
+>>>>>>> 44d6f2a5a4753c657f2bc2c93b972f14f37060f9

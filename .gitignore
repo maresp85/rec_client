@@ -1,0 +1,6 @@
+/media
+/app/settings.py
+/static
+/staticfiles
+requirements.txt
+gunicorn_config.py

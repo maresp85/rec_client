@@ -4,9 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
 django-widget-tweaks = "*"
 requests = "*"
+psycopg2 = "*"
+gunicorn = "*"
+django = "==4.1.10"
 
 [dev-packages]
 
