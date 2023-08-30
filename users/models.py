@@ -32,8 +32,10 @@ class User(AbstractUser):
     address_payment = models.CharField(max_length=120, verbose_name='dirección de cobro')
 
     mobile_number = models.CharField(
-        max_length=20, 
-        verbose_name='teléfono celular'
+        blank=True,
+        max_length=48, 
+        null=True,
+        verbose_name='teléfono celular',
     )
 
     company = models.ForeignKey(
@@ -66,8 +68,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = [
         'first_name', 
         'last_name',
-        'document_number', 
-        'mobile_number', 
+        'document_number',
         'city_id'
     ]
 
@@ -88,7 +89,7 @@ class Enterprise(models.Model):
 
     name = models.CharField(max_length=64, verbose_name='nombre')
 
-    mobile_phone = models.CharField(max_length=64, verbose_name='teléfono')
+    mobile_phone = models.CharField(blank=True, max_length=64, null=True, verbose_name='teléfono')
 
     def __str__(self):
         return self.name

@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% load poll_extras %}
 
 {% block content %}
 
@@ -85,7 +86,7 @@
 							Valor Último Abono
 						</td>  
 						<td class="px-2 py-1 border">
-							{{ item.last_payment_amount|default_if_none:'' }}
+							{{ item.amount_last_payment|default_if_none:'' }}
 						</td> 
 						<td class="px-2 py-1 border font-semibold bg-dark text-white">
 							Fecha del Último Abono
@@ -98,7 +99,14 @@
 						<td class="px-2 py-1 border font-semibold bg-dark text-white">
 							Fecha de Vencimiento
 						</td>   
-						<td class="px-2 py-1 border">{{ item.due_date }}</td>
+						<td class="px-2 py-1 border">
+							{% check_due_date item.due_date as due_date %}
+							{% if due_date %}
+								<strong class="text-danger">{{ item.due_date }} (vencido)</strong>
+							{% else %}
+								<strong>{{ item.due_date }}</strong>
+							{% endif %}
+						</td>
 						<td class="px-2 py-1 border font-semibold bg-dark text-white">
 							Abonos
 						</td>  

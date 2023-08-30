@@ -15,7 +15,7 @@ const getPaymentCredit = (server, creditId) => {
     if (creditId != '') ajaxRequest(server, creditId);    
 };
 
-const createTdTable = (amount, createdAt) => {
+const createTdTable = (amount, creditBalance, createdAt) => {
     let data = new Date(createdAt);
     createdAtFormat = data.toLocaleString();
 
@@ -23,12 +23,16 @@ const createTdTable = (amount, createdAt) => {
 
     const td1 = document.createElement('td');
     td1.innerHTML = amount;
-    
+
     const td2 = document.createElement('td');
-    td2.innerHTML = createdAtFormat;
+    td2.innerHTML = creditBalance;
+    
+    const td3 = document.createElement('td');
+    td3.innerHTML = createdAtFormat;
    
     tr.appendChild(td1); 
     tr.appendChild(td2); 
+    tr.appendChild(td3); 
     tbodyHistorialPayment.appendChild(tr); 
 }
 
@@ -57,11 +61,10 @@ ajaxRequest = (server, creditId) => {
     .then((data) => {
         if (data.length > 0) {
             createThTable();
-            data.forEach(element => {
-                createTdTable(element.amount, element.created_at);
+            data.forEach((element) => {
+                createTdTable(element.amount, element.credit_balance, element.created_at);
             });
         } else {
-            alert('entra');
             creditWithoutPayment.classList.remove('d-none');
         }
     })
