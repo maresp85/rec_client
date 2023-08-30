@@ -15,7 +15,7 @@ const getPaymentCredit = (server, creditId) => {
     if (creditId != '') ajaxRequest(server, creditId);    
 };
 
-const createTdTable = (amount, createdAt) => {
+const createTdTable = (amount, creditBalance, createdAt) => {
     let data = new Date(createdAt);
     createdAtFormat = data.toLocaleString();
 
@@ -23,12 +23,16 @@ const createTdTable = (amount, createdAt) => {
 
     const td1 = document.createElement('td');
     td1.innerHTML = amount;
-    
+
     const td2 = document.createElement('td');
-    td2.innerHTML = createdAtFormat;
+    td2.innerHTML = creditBalance;
+    
+    const td3 = document.createElement('td');
+    td3.innerHTML = createdAtFormat;
    
     tr.appendChild(td1); 
     tr.appendChild(td2); 
+    tr.appendChild(td3); 
     tbodyHistorialPayment.appendChild(tr); 
 }
 
@@ -39,10 +43,14 @@ const createThTable = () => {
     th1.innerHTML = 'Valor';
     
     const th2 = document.createElement('th');
-    th2.innerHTML = 'Fecha';
+    th2.innerHTML = 'Saldo del Crédito';
+
+    const th3 = document.createElement('th');
+    th3.innerHTML = 'Fecha';
    
     tr.appendChild(th1); 
     tr.appendChild(th2);
+    tr.appendChild(th3);
     theadHistorialPayment.appendChild(tr); 
 }
 
@@ -57,11 +65,10 @@ ajaxRequest = (server, creditId) => {
     .then((data) => {
         if (data.length > 0) {
             createThTable();
-            data.forEach(element => {
-                createTdTable(element.amount, element.created_at);
+            data.forEach((element) => {
+                createTdTable(element.amount, element.credit_balance, element.created_at);
             });
         } else {
-            alert('entra');
             creditWithoutPayment.classList.remove('d-none');
         }
     })

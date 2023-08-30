@@ -43,10 +43,14 @@ const createThTable = () => {
     th1.innerHTML = 'Valor';
     
     const th2 = document.createElement('th');
-    th2.innerHTML = 'Fecha';
+    th2.innerHTML = 'Saldo del Crédito';
+
+    const th3 = document.createElement('th');
+    th3.innerHTML = 'Fecha';
    
     tr.appendChild(th1); 
     tr.appendChild(th2);
+    tr.appendChild(th3);
     theadHistorialPayment.appendChild(tr); 
 }
 
