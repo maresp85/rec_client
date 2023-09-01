@@ -25,7 +25,9 @@ def custom_login(request):
                 data = response.json()
                 if 'id' in data and data['id']: 
 
-                    company_data = data['client_credit'][0]['user']['company']
+                    company_data = data['get_company']
+                    print(data['get_company'])
+                    print('____________')
                     create_company(company_data=company_data)
 
                     user = register_user(
@@ -57,7 +59,7 @@ def reffered_code_view(request):
                 data = response.json()
                 if 'id' in data and data['id']: 
                  
-                    company_data = data['client_credit'][0]['user']['company']
+                    company_data = data['get_company']
                     create_company(company_data=company_data)
 
                     url = reverse(
