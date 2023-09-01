@@ -23,11 +23,9 @@ def custom_login(request):
 
             if response.status_code == 200:
                 data = response.json()
-                if 'id' in data and data['id']: 
 
-                    company_data = data['get_company']
-                    print(data['get_company'])
-                    print('____________')
+                if 'id' in data and data['id']:
+                    company_data = data['office']
                     create_company(company_data=company_data)
 
                     user = register_user(
@@ -57,9 +55,9 @@ def reffered_code_view(request):
           
             if response.status_code == 200:
                 data = response.json()
-                if 'id' in data and data['id']: 
-                 
-                    company_data = data['get_company']
+
+                if 'id' in data and data['id']:                 
+                    company_data = data['office']
                     create_company(company_data=company_data)
 
                     url = reverse(
@@ -79,17 +77,21 @@ def reffered_code_view(request):
 
 
 def create_company(company_data):
-    company = Enterprise.objects.filter(name=company_data['name']).first()
+    company = Enterprise.objects.filter(name=company_data['company_name']).first()
+    
+    mobile_phone = None
+    if 'company_phone_number' in company_data:
+        mobile_phone = company_data['company_phone_number']
+
     if not company:
         Enterprise.objects.create(
-            id=company_data['id'],
-            name=company_data['name'],
-            mobile_phone=company_data['phone_number'] if 'phone_number' in company_data else None,
+            id=company_data['company'],
+            name=company_data['company_name'],
+            mobile_phone=mobile_phone,
         )
-    else:
-        if 'phone_number' in company_data:
-            company.mobile_phone = company_data['phone_number']
-            company.save(update_fields=['mobile_phone'])
+    else:        
+        company.mobile_phone = mobile_phone
+        company.save(update_fields=['mobile_phone'])
 
 
 def create_user_view(request, referred_code, company_id):     
