@@ -16,6 +16,7 @@ from users.usecases import CreateUser
 def custom_login(request):
     if request.POST:       
         form = CustomLoginForm(request.POST)       
+        
         if form.is_valid(): 
             document_number = form.cleaned_data['document_number']
             url = f'{settings.REC_SERVER}/validate_dni_digital_card/{document_number}/'        
@@ -25,16 +26,16 @@ def custom_login(request):
                 data = response.json()
 
                 if 'id' in data and data['id']:
-                    company_data = data['office']
+                    company_data = data['office']       
                     create_company(company_data=company_data)
 
                     user = register_user(
                         form_data=response.json(), 
                         referred_code=data['referred_code'],
-                        company_id=company_data['id'],
+                        company_id=company_data['company'],
                     )
                             
-                    if user:
+                    if user:                        
                         login(request, user)
                         return HttpResponseRedirect('/credito/')                    
                 else:
@@ -48,6 +49,7 @@ def custom_login(request):
 def reffered_code_view(request):
     if request.POST:       
         form = CustomReferralCodeForm(request.POST)       
+        
         if form.is_valid(): 
             referred_code = form.cleaned_data['referred_code']
             url = f'{settings.REC_SERVER}/validate_referred_code_digital_card/{referred_code}/'        
@@ -64,7 +66,7 @@ def reffered_code_view(request):
                         'create_user', 
                         kwargs={
                             'referred_code': referred_code,
-                            'company_id': company_data['id'],
+                            'company_id': company_data['company'],
                         }
                     )
                     return HttpResponseRedirect(url)
@@ -96,6 +98,7 @@ def create_company(company_data):
 
 def create_user_view(request, referred_code, company_id):     
     form = CreateUserForm()
+    
     if request.POST:
         form = CreateUserForm(request.POST)
         if form.is_valid(): 

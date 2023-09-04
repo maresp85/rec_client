@@ -41,3 +41,16 @@ class CityAdmin(admin.ModelAdmin):
     list_filter = ['is_active', 'country']
 
     search_fields = ['name']
+
+
+@admin.register(models.Enterprise)
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'name',
+        'mobile_phone',
+    ]
+
+    list_filter = ['name']
+
+    search_fields = ['name']
