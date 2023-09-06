@@ -75,7 +75,10 @@ ajaxRequest = (server, creditId) => {
             createThTable();
             data.forEach((element) => {
                 let concept = 'ABONO';
-                if (element.concept == 'DESEMBOLSO') concept = 'VENTA';
+                if (element.concept == 'DESEMBOLSO') {
+                    concept = 'VENTA';
+                    element.amount = '';
+                }
                 createTdTable(
                     element.amount, 
                     concept, 
