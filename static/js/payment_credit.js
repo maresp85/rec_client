@@ -15,7 +15,7 @@ const getPaymentCredit = (server, creditId) => {
     if (creditId != '') ajaxRequest(server, creditId);    
 };
 
-const createTdTable = (amount, creditBalance, createdAt) => {
+const createTdTable = (amount, concept, creditBalance, createdAt) => {
     let data = new Date(createdAt);
     createdAtFormat = data.toLocaleString();
 
@@ -25,14 +25,18 @@ const createTdTable = (amount, creditBalance, createdAt) => {
     td1.innerHTML = amount;
 
     const td2 = document.createElement('td');
-    td2.innerHTML = creditBalance;
-    
+    td2.innerHTML = concept;
+
     const td3 = document.createElement('td');
-    td3.innerHTML = createdAtFormat;
+    td3.innerHTML = creditBalance
+    
+    const td4 = document.createElement('td');
+    td4.innerHTML = createdAtFormat;
    
     tr.appendChild(td1); 
     tr.appendChild(td2); 
     tr.appendChild(td3); 
+    tr.appendChild(td4); 
     tbodyHistorialPayment.appendChild(tr); 
 }
 
@@ -41,16 +45,20 @@ const createThTable = () => {
 
     const th1 = document.createElement('th');
     th1.innerHTML = 'Valor';
-    
-    const th2 = document.createElement('th');
-    th2.innerHTML = 'Saldo del Crédito';
 
+    const th2 = document.createElement('th');
+    th2.innerHTML = 'Concepto';
+    
     const th3 = document.createElement('th');
-    th3.innerHTML = 'Fecha';
+    th3.innerHTML = 'Saldo del Crédito';
+
+    const th4 = document.createElement('th');
+    th4.innerHTML = 'Fecha';
    
     tr.appendChild(th1); 
     tr.appendChild(th2);
     tr.appendChild(th3);
+    tr.appendChild(th4);
     theadHistorialPayment.appendChild(tr); 
 }
 
@@ -66,7 +74,14 @@ ajaxRequest = (server, creditId) => {
         if (data.length > 0) {
             createThTable();
             data.forEach((element) => {
-                createTdTable(element.amount, element.credit_balance, element.created_at);
+                let concept = 'ABONO';
+                if (element.concept == 'DESEMBOLSO') concept = 'VENTA';
+                createTdTable(
+                    element.amount, 
+                    concept, 
+                    element.credit_balance, 
+                    element.created_at,
+                );
             });
         } else {
             creditWithoutPayment.classList.remove('d-none');
