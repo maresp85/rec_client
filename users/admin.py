@@ -10,10 +10,14 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',   
         'username',
+        'document_number',
+        'mobile_number',
         'is_active',
-        'is_staff',
+        'company',
+        'created_from_server',
     ]
-    list_filter = ['is_active']
+    
+    list_filter = ['company', 'created_from_server', 'is_active']
 
     search_fields = ['first_name', 'username']
 
