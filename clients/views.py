@@ -19,7 +19,7 @@ def get_credit(request):
         os_system: str = request.user_agent.os.family  # returns 'iOS'        
         os_version: str = request.user_agent.os.version_string  # returns '5.1'
         os_device: str = request.user_agent.device.family  # returns 'iPhone'
-        device = f'{os_device}-{os_system}-{os_version}. ip: {get_client_ip()}'
+        device = f'{os_device}-{os_system}-{os_version}. ip: {get_client_ip(request)}'
     except:
         device = ''
 
@@ -37,11 +37,13 @@ def get_credit(request):
 
 
 def get_client_ip(request):
+    print('entra')
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
+    
     return ip
 
 
