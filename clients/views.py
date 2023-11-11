@@ -19,7 +19,8 @@ def get_credit(request):
         os_system: str = request.user_agent.os.family  # returns 'iOS'        
         os_version: str = request.user_agent.os.version_string  # returns '5.1'
         os_device: str = request.user_agent.device.family  # returns 'iPhone'
-        device = f'{os_device}-{os_system}-{os_version}'
+        ip: str = request.META.get('REMOTE_ADDR')
+        device = f'{os_device}-{os_system}-{os_version}. ip: {ip}'
     except:
         device = ''
 
