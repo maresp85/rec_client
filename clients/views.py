@@ -1,3 +1,4 @@
+import requests
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -19,11 +20,11 @@ def get_credit(request):
         os_system: str = request.user_agent.os.family  # returns 'iOS'        
         os_version: str = request.user_agent.os.version_string  # returns '5.1'
         os_device: str = request.user_agent.device.family  # returns 'iPhone'
-        device = f'{os_device}-{os_system}-{os_version}. ip: {get_client_ip(request)}'
+        device = f'{os_device}-{os_system}-{os_version}'
     except:
         device = ''
 
-    url = f'{settings.REC_SERVER}/credit_client/{document_number}/?device={device}'
+    url = f'{settings.REC_SERVER}/credit_client/{document_number}?device={device}&ip_address={request.user.ip_address}'
     response = get_requests(url)
  
     if response.status_code == 200:        
@@ -34,16 +35,6 @@ def get_credit(request):
         }
           
     return render(request, 'clients/credit.html', context)
-
-
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[1]        
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    
-    return ip
 
 
 def request_credit(request):

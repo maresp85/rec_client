@@ -33,6 +33,7 @@ def custom_login(request):
                         form_data=response.json(), 
                         referred_code=data['referred_code'],
                         company_id=company_data['company'],
+                        ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else ''
                     )
                             
                     if user:                        
@@ -103,9 +104,10 @@ def create_user_view(request, referred_code, company_id):
         form = CreateUserForm(request.POST)
         if form.is_valid(): 
             user = register_user(
-                form_data=form.cleaned_data, 
+                form_data=form.cleaned_data,
                 referred_code=referred_code,
                 company_id=company_id,
+                ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else ''
             )            
 
             if user:
@@ -117,11 +119,12 @@ def create_user_view(request, referred_code, company_id):
     return render(request, 'users/create_user.html', {'form': form})
 
 
-def register_user(form_data, referred_code, company_id):
+def register_user(form_data: dict, referred_code: str, company_id, ip_address: str):
     usecase = CreateUser(
         data=form_data, 
         referred_code=referred_code,
         company_id=company_id,
+        ip_address=ip_address
     )
     usecase.execute()  
     document_number = form_data['document_number']

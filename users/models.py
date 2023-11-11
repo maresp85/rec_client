@@ -63,6 +63,8 @@ class User(AbstractUser):
         verbose_name='código referido'
     )
 
+    ip_address = models.CharField(max_length=64, null=True, verbose_name='ip_address')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='fecha creación')
 
     REQUIRED_FIELDS = [

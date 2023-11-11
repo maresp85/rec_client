@@ -138,6 +138,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'users.User'
 
 REC_SERVER = 'https://digitalrec.info:8000'
+#REC_SERVER = 'http://localhost:8000'
 REC_TOKEN_SERVER = '9f7044aad3e4b7923aebe1c91caf25a55866f722'
 
 LOGOUT_REDIRECT_URL = 'login'

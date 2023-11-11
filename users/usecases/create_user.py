@@ -2,10 +2,11 @@ from users.models import User, Enterprise
 
 
 class CreateUser:
-    def __init__(self, data, referred_code, company_id, request=None):
+    def __init__(self, data, referred_code, company_id, ip_address, request=None):
         self._data = data
         self._referred_code = referred_code
         self._company_id = company_id
+        self._ip_address = ip_address
 
     def execute(self):
         self._created_from_server = False
@@ -43,5 +44,8 @@ class CreateUser:
             user.address = self._data['address']
             user.address_payment = self._data['address_payment']
             user.company = self._company
+
+        ip_address: str = self._ip_address.replace('myip = "', '').replace('";', '')
+        user.ip_address = ip_address
         
         user.save()
