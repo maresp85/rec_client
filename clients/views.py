@@ -13,10 +13,20 @@ def get_credit(request):
     
     context = {}
     document_number = request.user.document_number
-    url = f'{settings.REC_SERVER}/credit_client/{document_number}/'
+
+    device: str = ''
+    try:
+        os_system: str = request.user_agent.os.family  # returns 'iOS'        
+        os_version: str = request.user_agent.os.version_string  # returns '5.1'
+        os_device: str = request.user_agent.device.family  # returns 'iPhone'
+        device = f'{os_device}-{os_system}-{os_version}'
+    except:
+        device = ''
+
+    url = f'{settings.REC_SERVER}/credit_client/{document_number}/?device={device}'
     response = get_requests(url)
  
-    if response.status_code == 200:
+    if response.status_code == 200:        
         credit = response.json()
         context = {
             'credit': credit,

@@ -12,7 +12,7 @@ def client_validate_dni(request):
             document_number = form.cleaned_data['document_number']
             url = f'{settings.REC_SERVER}/client_validate_dni/{document_number}/'        
             response = requests.get(url)    
-            print(response.status_code )     
+               
             if response.status_code == 200:
                 return redirect('credit')       
         else:

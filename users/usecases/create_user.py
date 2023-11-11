@@ -13,9 +13,6 @@ class CreateUser:
             self._created_from_server = True
 
         self._company = Enterprise.objects.filter(id=self._company_id).first()
-
-        print(self._company_id)
-        print('______________')
         
         self._create_user()  
 
