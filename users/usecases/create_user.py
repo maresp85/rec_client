@@ -44,8 +44,7 @@ class CreateUser:
             user.address = self._data['address']
             user.address_payment = self._data['address_payment']
             user.company = self._company
-
-        ip_address: str = self._ip_address.replace('myip = "', '').replace('";', '')
-        user.ip_address = ip_address
+        
+        user.ip_address = self._ip_address
         
         user.save()

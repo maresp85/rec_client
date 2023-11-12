@@ -1,7 +1,7 @@
-fetch('http://l2.io/ip.js?var=myip', {
+fetch('https://api.ipify.org?format=json', {
    headers: {
       'Accept': 'application/json'
    }
 })
-   .then(response => response.text())
-   .then(text => document.getElementById('ip_address').value = text)
+   .then(response => response.json())
+   .then(text => document.getElementById('ip_address').value = text.ip)
