@@ -6,7 +6,9 @@ from . import views
 
 
 urlpatterns = [   
-    path('', views.custom_login, name='login'),   
+    path('', views.login, name='login'),
+
+    path('custom_login/', views.custom_login, name='custom_login'),
 
     path('codigo-referido/', views.reffered_code_view, name='reffered_code'), 
 

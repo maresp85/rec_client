@@ -13,6 +13,9 @@ class CustomLoginForm(forms.Form):
         document_number = self.cleaned_data.get('document_number')
         if not document_number or document_number == '':         
             self.add_error('document_number', 'El documento es requerido.')
+
+        if document_number and User.objects.filter(document_number=document_number).exists():
+            self.add_error('document_number', 'El documento está registrado con otro usuario.')
      
         return self.cleaned_data
     
@@ -40,8 +43,6 @@ class CreateUserForm(ModelForm):
     class Meta:
         model = User
         fields = [
-            'first_name', 
-            'last_name', 
             'address', 
             'address_payment',
             'mobile_number',

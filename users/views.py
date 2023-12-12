@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -13,6 +14,13 @@ from users.usecases import CreateUser
 
 
 @csrf_exempt
+def login(request): 
+          
+    return render(request, 'users/login.html')
+
+
+@csrf_exempt
+@login_required(login_url='/')
 def custom_login(request):
     if request.POST:       
         form = CustomLoginForm(request.POST)       
@@ -33,20 +41,24 @@ def custom_login(request):
                         form_data=response.json(), 
                         referred_code=data['referred_code'],
                         company_id=company_data['company'],
-                        ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else ''
+                        ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
+                        user=request.user,
                     )
                             
                     if user:                        
-                        login(request, user)
                         return HttpResponseRedirect('/credito/')                    
                 else:
                     return HttpResponseRedirect('/codigo-referido/')                           
-        else:         
-            return render(request, 'users/login.html', { 'form': form })        
-          
-    return render(request, 'users/login.html')
+        else:    
+            return render(request, 'users/custom_login.html', { 'form': form })        
+
+    if request.user.document_number:
+        return HttpResponseRedirect('/credito/')
+    
+    return render(request, 'users/custom_login.html')
 
 
+@login_required(login_url='/')
 def reffered_code_view(request):
     if request.POST:       
         form = CustomReferralCodeForm(request.POST)       
@@ -97,36 +109,34 @@ def create_company(company_data):
         company.save(update_fields=['mobile_phone'])
 
 
+@login_required(login_url='/')
 def create_user_view(request, referred_code, company_id):     
     form = CreateUserForm()
     
     if request.POST:
         form = CreateUserForm(request.POST)
         if form.is_valid(): 
-            user = register_user(
+            register_user(
                 form_data=form.cleaned_data,
                 referred_code=referred_code,
                 company_id=company_id,
-                ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else ''
+                ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
+                user=request.user,
             )            
 
-            if user:
-                login(request, user)
-                return HttpResponseRedirect('/credito/')   
+            return HttpResponseRedirect('/credito/')   
         else:  
             return render(request, 'users/create_user.html', {'form': form})   
 
     return render(request, 'users/create_user.html', {'form': form})
 
 
-def register_user(form_data: dict, referred_code: str, company_id, ip_address: str):
+def register_user(form_data: dict, referred_code: str, company_id, ip_address: str, user: object):
     usecase = CreateUser(
         data=form_data, 
         referred_code=referred_code,
         company_id=company_id,
-        ip_address=ip_address
+        ip_address=ip_address,
+        user=user,
     )
-    usecase.execute()  
-    document_number = form_data['document_number']
-
-    return authenticate(username=document_number, password='secret*rec_client_2022')
+    usecase.execute()

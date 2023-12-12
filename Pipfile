@@ -9,6 +9,11 @@ requests = "*"
 psycopg2 = "*"
 gunicorn = "*"
 django = "==4.1.10"
+social-auth-app-django = "*"
+psycopg2-binary = "*"
+install = "*"
+django-user-agents = "*"
+python-social-auth = "*"
 
 [dev-packages]
 

@@ -1,5 +1,5 @@
-import requests
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
@@ -8,13 +8,13 @@ from django.shortcuts import render
 from app.utils import get_requests, post_requests
 
 
+@login_required(login_url='/')
 def get_credit(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('login'))
     
     context = {}
     document_number = request.user.document_number
-
     device: str = ''
     try:
         os_system: str = request.user_agent.os.family  # returns 'iOS'        

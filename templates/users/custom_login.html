@@ -67,10 +67,10 @@
       <div class="row justify-content-center">
 
         <div class="col-lg-4 col-md-6">          
-          <div class="">
-            <div class="">
+          <div class="card mb-3">
+            <div class="card-body">
               <div class="pt-2 pb-2">
-                                                  
+                <h6 class="card-title text-center pb-0 fs-4"></h6>                                      
               </div>
               <form id="id_form_login" class="row g-3" action="" method="post">
                   
@@ -80,17 +80,29 @@
                       {{ form.non_field_errors.as_text }}
                   </div>
                   {% endif %}   
-                                   
-                  
-                  <a 
-                    href="{% url 'social:begin' 'google-oauth2' %}?next=/custom_login/" 
-                    class="btn btn-danger w-100 text-light fs-5 fw-bold"
-                  >
-                    Ingrese con el correo GMail
-                  </a>
+                                    
+                  <div class="col-12">
+                    <label for="document_number" class="form-label">Número de documento</label>
+                    <input 
+                      type="number"
+                      class="w-100 form-control"	
+                      name="document_number"
+                      placeholder=""									
+                      required									 
+                    />
+                    {% if form.document_number.errors %}
+                    <span class="text-danger fs-7 mt-1">{{ form.document_number.errors }}</span>
+                    {% endif %}
+                  </div>
 
-                  <input type="hidden" id="ip_address" name="ip_address">                                             
-                  
+                  <input type="hidden" id="ip_address" name="ip_address">
+                                             
+                  <div class="col-12"> 
+                      <button id="id_submit" class="btn btn-primary w-100 text-dark" type="submit">
+                        <span id="id_submit_label">Ingresar</span>     
+                      </button>
+                  </div>
+
               </form>
             </div>
           </div>                            
