@@ -47,6 +47,7 @@ def request_credit(request):
         url = f'{settings.REC_SERVER}/credit_request/'
         data: dict = {
             'mobile_number': request.POST['mobile_number'],
+            'document_number': request.user.document_number,
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
             'address': request.user.address,
