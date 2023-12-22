@@ -1,18 +1,22 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render
+from social_django.models import UserSocialAuth
 
 from app.utils import get_requests, post_requests
 
 
 @login_required(login_url='/')
 def get_credit(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('login'))
-    
+    if not request.user.email:
+        google_login = UserSocialAuth.objects.filter(user=request.user).first()
+        if google_login:
+            user = request.user
+            user.email = google_login.uid
+            user.save(update_fields=['email'])
+
     context = {}
     document_number = request.user.document_number
     device: str = ''
@@ -37,6 +41,7 @@ def get_credit(request):
     return render(request, 'clients/credit.html', context)
 
 
+@login_required(login_url='/')
 def request_credit(request):
     if request.POST:
         url = f'{settings.REC_SERVER}/credit_request/'
@@ -45,6 +50,7 @@ def request_credit(request):
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
             'address': request.user.address,
+            'is_rec_client': False,
         }
         
         if request.user.client_id:

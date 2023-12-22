@@ -156,8 +156,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/custom_login/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/custom_login/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/credito/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/credito/'
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',
@@ -175,8 +175,8 @@ SOCIAL_AUTH_PIPELINE = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-'https://www.googleapis.com/auth/userinfo.email',
-'https://www.googleapis.com/auth/userinfo.profile'
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
 # Google+ SignIn (google-plus)

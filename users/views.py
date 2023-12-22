@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -9,56 +9,68 @@ from django.views.decorators.csrf import csrf_exempt
 from app.utils import get_requests
 
 from users.forms import CustomLoginForm, CreateUserForm, CustomReferralCodeForm
-from users.models import Enterprise
+from users.models import Enterprise, User
 from users.usecases import CreateUser
 
 
 @csrf_exempt
-def login(request): 
+def email_login(request): 
           
-    return render(request, 'users/login.html')
+    return render(request, 'users/email_login.html')
 
 
 @csrf_exempt
-@login_required(login_url='/')
 def custom_login(request):
     if request.POST:       
         form = CustomLoginForm(request.POST)       
         
         if form.is_valid(): 
             document_number = form.cleaned_data['document_number']
+
+            user = User.objects.filter(document_number=document_number).first()
+
+            if user:
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+                if not user.email:
+                    return HttpResponseRedirect('/email-login/')
+                
+                return HttpResponseRedirect('/credito/')
+            
             url = f'{settings.REC_SERVER}/validate_dni_digital_card/{document_number}/'        
             response = get_requests(url)
-
+            
             if response.status_code == 200:
-                data = response.json()
+                data = response.json()                
 
-                if 'id' in data and data['id']:
+                if 'document_number' in data and data['document_number']:
                     company_data = data['office']       
                     create_company(company_data=company_data)
+                 
+                    if not user:
+                        user = register_user(
+                            form_data=response.json(), 
+                            referred_code=data['referred_code'],
+                            company_id=company_data['company'],
+                            ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
+                        )                        
 
-                    user = register_user(
-                        form_data=response.json(), 
-                        referred_code=data['referred_code'],
-                        company_id=company_data['company'],
-                        ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
-                        user=request.user,
-                    )
-                            
-                    if user:                        
-                        return HttpResponseRedirect('/credito/')                    
+                        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+
+                        if not user.email:
+                            return HttpResponseRedirect('/email-login/')
+               
+                        return HttpResponseRedirect('/credito/')
+                
                 else:
-                    return HttpResponseRedirect('/codigo-referido/')                           
-        else:    
+                    return HttpResponseRedirect('/codigo-referido/')  
+                                             
+        else:            
             return render(request, 'users/custom_login.html', { 'form': form })        
-
-    if request.user.document_number:
-        return HttpResponseRedirect('/credito/')
     
     return render(request, 'users/custom_login.html')
 
 
-@login_required(login_url='/')
 def reffered_code_view(request):
     if request.POST:       
         form = CustomReferralCodeForm(request.POST)       
@@ -109,34 +121,37 @@ def create_company(company_data):
         company.save(update_fields=['mobile_phone'])
 
 
-@login_required(login_url='/')
 def create_user_view(request, referred_code, company_id):     
     form = CreateUserForm()
     
     if request.POST:
         form = CreateUserForm(request.POST)
         if form.is_valid(): 
-            register_user(
+            user = register_user(
                 form_data=form.cleaned_data,
                 referred_code=referred_code,
                 company_id=company_id,
                 ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
-                user=request.user,
-            )            
+            )
 
-            return HttpResponseRedirect('/credito/')   
+            if user:
+                login(request, user)
+                return HttpResponseRedirect('/email-login/')
         else:  
             return render(request, 'users/create_user.html', {'form': form})   
 
     return render(request, 'users/create_user.html', {'form': form})
 
 
-def register_user(form_data: dict, referred_code: str, company_id, ip_address: str, user: object):
+def register_user(form_data: dict, referred_code: str, company_id: int, ip_address: str):
     usecase = CreateUser(
         data=form_data, 
         referred_code=referred_code,
         company_id=company_id,
         ip_address=ip_address,
-        user=user,
     )
     usecase.execute()
+
+    document_number = form_data['document_number']
+
+    return authenticate(username=document_number, password='secret*rec_client_2022')
