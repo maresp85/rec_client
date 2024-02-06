@@ -23,7 +23,7 @@ PROJECT_APPS = [
     'django_user_agents',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://tdelectrica.info','http://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://tdelectrica.info','http://*.127.0.0.1', 'https://tdelectrica.info']
 
 INSTALLED_APPS = PROJECT_APPS + [
     'social_django',
