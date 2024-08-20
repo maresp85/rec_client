@@ -44,14 +44,16 @@ def custom_login(request):
                 data = response.json()                
 
                 if 'document_number' in data and data['document_number']:
-                    company_data = data['office']       
+                    company_data = data['office']
                     create_company(company_data=company_data)
                  
                     if not user:
                         user = register_user(
-                            form_data=response.json(), 
+                            form_data=response.json(),
                             referred_code=data['referred_code'],
                             company_id=company_data['company'],
+                            office_name=company_data['name'],
+                            office_phone_number=company_data.get('phone_number'),
                             ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
                         )                        
 
@@ -92,6 +94,8 @@ def reffered_code_view(request):
                         kwargs={
                             'referred_code': referred_code,
                             'company_id': company_data['company'],
+                            'office_name': company_data['name'],
+                            'office_phone_number': company_data.get('phone_number'),
                         }
                     )
                     return HttpResponseRedirect(url)
@@ -121,7 +125,13 @@ def create_company(company_data):
         company.save(update_fields=['mobile_phone'])
 
 
-def create_user_view(request, referred_code, company_id):     
+def create_user_view(
+    request, 
+    referred_code: str, 
+    company_id: int, 
+    office_name: str = '', 
+    office_phone_number: str = ''
+):     
     form = CreateUserForm()
     
     if request.POST:
@@ -131,6 +141,8 @@ def create_user_view(request, referred_code, company_id):
                 form_data=form.cleaned_data,
                 referred_code=referred_code,
                 company_id=company_id,
+                office_name=office_name,
+                office_phone_number=office_phone_number,
                 ip_address=request.POST['ip_address'] if request.POST.get('ip_address') else '',
             )
 
@@ -143,11 +155,20 @@ def create_user_view(request, referred_code, company_id):
     return render(request, 'users/create_user.html', {'form': form})
 
 
-def register_user(form_data: dict, referred_code: str, company_id: int, ip_address: str):
+def register_user(
+    form_data: dict,
+    referred_code: str,
+    company_id: int,
+    office_name: str = '',
+    office_phone_number: str = '',
+    ip_address: str = ''
+):
     usecase = CreateUser(
         data=form_data, 
         referred_code=referred_code,
         company_id=company_id,
+        office_name=office_name,
+        office_phone_number=office_phone_number,
         ip_address=ip_address,
     )
     usecase.execute()

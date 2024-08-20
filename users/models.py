@@ -4,7 +4,11 @@ from django.db import models
 
 
 class User(AbstractUser):
-    client_id = models.IntegerField(blank=True, null=True, verbose_name='cliente id')
+    client_id = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='cliente id'
+    )
 
     first_name = models.CharField(max_length=128, verbose_name='nombre')
 
@@ -27,45 +31,75 @@ class User(AbstractUser):
         ],
     )
 
-    address = models.CharField(max_length=120, verbose_name='dirección domicilio')
+    address = models.CharField(
+        max_length=120,
+        verbose_name='dirección domicilio',
+    )
 
-    address_payment = models.CharField(max_length=120, verbose_name='dirección de cobro')
+    address_payment = models.CharField(
+        max_length=120, 
+        verbose_name='dirección de cobro'
+    )
 
     mobile_number = models.CharField(
         blank=True,
-        max_length=48, 
+        max_length=48,
         null=True,
         verbose_name='teléfono celular',
     )
 
     company = models.ForeignKey(
         'users.Enterprise',
-        blank=True, 
-        null=True, 
+        blank=True,
+        null=True,
         on_delete=models.PROTECT,
         verbose_name='empresa',
     )
 
     city = models.ForeignKey(
         'users.city',
-        blank=True, 
-        null=True, 
+        blank=True,
+        null=True,
         on_delete=models.PROTECT,
         verbose_name='ciudad',
     )
 
-    created_from_server = models.BooleanField(default=False, verbose_name='creado desde el server')
-
-    referred_code = models.CharField(
-        blank=True, 
-        max_length=24, 
-        null=True, 
-        verbose_name='código referido'
+    created_from_server = models.BooleanField(
+        default=False,
+        verbose_name='creado desde el server'
     )
 
-    ip_address = models.CharField(max_length=64, null=True, verbose_name='ip_address')
+    referred_code = models.CharField(
+        blank=True,
+        max_length=24,
+        null=True,
+        verbose_name='código referido',
+    )
 
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='fecha creación')
+    office_name = models.CharField(
+        blank=True,
+        max_length=40,
+        null=True,
+        verbose_name='nombre oficina',
+    )
+
+    office_phone_number = models.CharField(
+        blank=True,
+        max_length=64,
+        null=True,
+        verbose_name='teléfonos oficina',
+    )
+
+    ip_address = models.CharField(
+        max_length=64,
+        null=True,
+        verbose_name='ip_address',
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True, 
+        verbose_name='fecha creación',
+    )
 
     REQUIRED_FIELDS = [
         'first_name', 
@@ -91,7 +125,12 @@ class Enterprise(models.Model):
 
     name = models.CharField(max_length=64, verbose_name='nombre')
 
-    mobile_phone = models.CharField(blank=True, max_length=64, null=True, verbose_name='teléfono')
+    mobile_phone = models.CharField(
+        blank=True, 
+        max_length=64, 
+        null=True, 
+        verbose_name='teléfono'
+    )
 
     def __str__(self):
         return self.name

@@ -12,7 +12,15 @@ urlpatterns = [
 
     path('codigo-referido/', views.reffered_code_view, name='reffered_code'), 
 
-    path('nuevo-cliente/<str:referred_code>/<str:company_id>/', views.create_user_view, name='create_user'), 
+    path(
+        'nuevo-cliente/<str:referred_code>/<str:company_id>/<str:office_name>/<str:office_phone_number>/', 
+        views.create_user_view, 
+        name='create_user'
+    ), 
 
-    path('logout/', auth_views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
+    path(
+        'logout/', 
+        auth_views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), 
+        name='logout'
+    ),
 ]

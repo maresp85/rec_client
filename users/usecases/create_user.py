@@ -2,10 +2,20 @@ from users.models import Enterprise, User
 
 
 class CreateUser:
-    def __init__(self, data: dict, referred_code: str, company_id: int, ip_address: str):
+    def __init__(
+        self,
+        data: dict,
+        referred_code: str,
+        company_id: int,
+        office_name: str,
+        office_phone_number: str,
+        ip_address: str,
+    ):
         self._data: dict = data
         self._referred_code: str = referred_code
         self._company_id: int = company_id
+        self._office_name: str = office_name
+        self._office_phone_number: str = office_phone_number
         self._ip_address: str = ip_address
 
     def execute(self):
@@ -32,6 +42,8 @@ class CreateUser:
             user.document_number = self._data['document_number'].strip()
             user.referred_code = self._referred_code if self._referred_code else None
             user.company = self._company
+            user.office_name = self._office_name
+            user.office_phone_number = self._office_phone_number
         else:
             user.first_name = self._data['first_name']
             user.last_name = self._data['last_name']
@@ -39,6 +51,8 @@ class CreateUser:
             user.address = self._data['address']
             user.address_payment = self._data['address_payment']
             user.company = self._company
+            user.office_name = self._office_name
+            user.office_phone_number = self._office_phone_number
 
         user.ip_address = self._ip_address
 
