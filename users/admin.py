@@ -14,6 +14,8 @@ class UserAdmin(admin.ModelAdmin):
         'document_number',
         'mobile_number',
         'is_active',
+        'office_name',
+        'office_phone_number',
         'company',
         'created_from_server',
     ]
