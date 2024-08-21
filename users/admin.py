@@ -20,9 +20,14 @@ class UserAdmin(admin.ModelAdmin):
         'created_from_server',
     ]
     
-    list_filter = ['company', 'created_from_server', 'is_active']
+    list_filter = [
+        'company', 
+        'office_name', 
+        'created_from_server', 
+        'is_active'
+    ]
 
-    search_fields = ['first_name', 'username']
+    search_fields = ['first_name', 'username', 'email']
 
 
 @admin.register(models.Country)
