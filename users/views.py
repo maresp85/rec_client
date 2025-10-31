@@ -41,7 +41,9 @@ def custom_login(request):
             response = get_requests(url)
             
             if response.status_code == 200:
-                data = response.json()                
+                data = response.json()
+
+                print('Data: ', data)              
 
                 if 'document_number' in data and data['document_number']:
                     company_data = data['office']

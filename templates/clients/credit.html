@@ -92,7 +92,7 @@
 							Fecha del Último Abono
 						</td>  
 						<td class="px-2 py-1 border">
-							{{ item.last_payment|default_if_none:'' }}
+							{{ item.last_payment|format_due_date }}
 						</td> 
 					</tr> 
 					<tr class="text-sm">
@@ -100,11 +100,11 @@
 							Fecha de Vencimiento
 						</td>   
 						<td class="px-2 py-1 border">
-							{% check_due_date item.due_date as due_date %}
-							{% if due_date %}
-								<strong class="text-danger">{{ item.due_date }} (vencido)</strong>
+							{% check_due_date item.due_date as is_overdue %}
+							{% if is_overdue %}
+								<strong class="text-danger">{{ item.due_date|format_due_date }} (vencido)</strong>
 							{% else %}
-								<strong>{{ item.due_date }}</strong>
+								<strong>{{ item.due_date|format_due_date }}</strong>
 							{% endif %}
 						</td>
 						<td class="px-2 py-1 border font-semibold bg-dark text-white">
