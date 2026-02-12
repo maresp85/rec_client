@@ -1,12 +1,19 @@
 {% if messages %}
 {% for message in messages %}
-<div class="toast-container position-absolute p-5 top-0 start-50 translate-middle-x">
-    <div id="myToastMessages" class="toast text-white {% if message.tags == 'error' %} bg-danger {% else %} bg-{{ message.tags }} {% endif %} border-0" role="alert" aria-live="assertive" aria-atomic="true">  
-      <div class="toast-body text-center">
+<div class="toast-container position-fixed p-3 top-0 start-50 translate-middle-x" style="z-index:9999;">
+    <div id="myToastMessages" class="toast text-white {% if message.tags == 'error' %} bg-danger {% elif message.tags == 'success' %} bg-success {% else %} bg-{{ message.tags }} {% endif %} border-0" role="alert" aria-live="assertive" aria-atomic="true" style="border-radius:0.75rem;">
+      <div class="toast-body text-center" style="padding:0.75rem 1.25rem; font-size:0.9rem;">
+        {% if message.tags == 'error' %}
+        <i class="bi bi-exclamation-circle me-1"></i>
+        {% elif message.tags == 'success' %}
+        <i class="bi bi-check-circle me-1"></i>
+        {% else %}
+        <i class="bi bi-info-circle me-1"></i>
+        {% endif %}
         {{ message }}
       </div>
     </div>
-</div>  
+</div>
 <script type="text/javascript">
   var myAlert = document.getElementById('myToastMessages');
   var bsAlert = new bootstrap.Toast(myAlert);

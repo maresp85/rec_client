@@ -5,213 +5,221 @@
 
 {% block content %}
 
-<div class="mt-5 mb-3">
-	<div class="row">
-		<div class="col-md-10">
-			<h4 class="card-title pb-0 fs-4">Bienvenido(a), {{ user.full_name }}</h4>
+<div class="mb-4">
+	<div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+		<div>
+			<h4 class="td-section-title mb-1">Bienvenido(a), {{ user.full_name }}</h4>
+			<p class="td-section-subtitle mb-0">Consulta el estado de tus créditos</p>
 		</div>
-		<div class="col-md-2 text-right">
-			<button 
-				type="button"
-				data-bs-toggle="modal"
-				data-bs-target="#modalCreditRequest" 
-				class="btn btn-warning"
-			>
-				Solicitar Crédito
-			</button>
-		</div>
+		<button
+			type="button"
+			data-bs-toggle="modal"
+			data-bs-target="#modalCreditRequest"
+			class="btn td-btn-warning"
+		>
+			<i class="bi bi-plus-circle me-1"></i> Solicitar Crédito
+		</button>
 	</div>
 </div>
 
 {% if not credit %}
-<div class="">
-	<section class="flex items-center justify-center h-screen">
-		<h6 class="text-2xl">Actualmente no tiene créditos vigentes.</h6>
-	</section>
+<div class="td-empty-state">
+	<i class="bi bi-credit-card-2-front d-block"></i>
+	<h6 class="mt-2" style="color: var(--td-text-muted);">Actualmente no tiene créditos vigentes.</h6>
 </div>
 {% else %}
-<div class="flex-grow md:block md:overflow-y-auto">
-	<section class="flex items-center justify-center h-screen mb-2">
-		<h6 class="text-2xl">A continuación encontrará la información de sus créditos vigentes.</h6>
-	</section>
+<div>
+	<p class="td-section-subtitle mb-3">
+		<i class="bi bi-info-circle me-1"></i>
+		A continuación encontrará la información de sus créditos vigentes.
+	</p>
 
 	{% for item in credit %}
-		<div class="mb-4">
-			<table class="table">      
-				<tbody class="bg-white text-gray-800">			
-					<tr class="text-sm">
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Valor del Crédito
-						</td>
-						<td class="px-2 py-1 border">{{ item.initial_balance }}</td>
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Saldo Actual
-						</td>    
-						<td class="px-2 py-1 border">{{ item.current_balance }}</td>  
-					</tr>
-					<tr class="text-sm">
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							N° Cuotas
-						</td>     
-						<td class="px-2 py-1 border">{{ item.installment }}</td>
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Valor Cuota
-						</td>  
-						<td class="px-2 py-1 border">{{ item.amount_installment }}</td>
-					</tr>  
-					<tr class="text-sm">
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Cuotas Pagas
-						</td>     
-						<td class="px-2 py-1 border">{{ item.paid_installment  }}</td>
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Cuotas Adelantadas
-						</td>     
-						<td class="px-2 py-1 border">{{ item.advanced_installment }}</td>
-					</tr>   
-					<tr class="text-sm">					
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Cuotas en Mora
-						</td>     
-						<td class="px-2 py-1 border">{{ item.delay_installment }}</td>
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Fecha Desembolso
-						</td>   
-						<td class="px-2 py-1 border">
-							{{ item.created_at_date }}
-						</td>					
-					</tr>
-					<tr class="text-sm">										
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Valor Último Abono
-						</td>  
-						<td class="px-2 py-1 border">
-							{{ item.amount_last_payment|default_if_none:'' }}
-						</td> 
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Fecha del Último Abono
-						</td>  
-						<td class="px-2 py-1 border">
-							{{ item.last_payment|format_due_date }}
-						</td> 
-					</tr> 
-					<tr class="text-sm">
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Fecha de Vencimiento
-						</td>   
-						<td class="px-2 py-1 border">
-							{% check_due_date item.due_date as is_overdue %}
-							{% if is_overdue %}
-								<strong class="text-danger">{{ item.due_date|format_due_date }} (vencido)</strong>
-							{% else %}
-								<strong>{{ item.due_date|format_due_date }}</strong>
-							{% endif %}
-						</td>
-						<td class="px-2 py-1 border font-semibold bg-dark text-white">
-							Abonos
-						</td>  
-						<td class="px-2 py-1 border">  
-							<a
-								href="#" 
-								class="link-primary" 
-								data-bs-toggle="modal" 
-								data-bs-target="#modal"
-								onclick="getPaymentCredit('{{SERVER}}', {{item.id}})"
-							>
-								Clic aquí
-							</button>
-						</td> 
-					</tr>              
-				</tbody>  
-			</table> 
+	<div class="mb-4">
+		{% if item.status == 50 %}
+		<div class="alert py-2 px-3 mb-2" style="background:#d1fae5; border:1px solid #6ee7b7; border-radius:0.5rem; color:#065f46; font-size:0.9rem;">
+			<i class="bi bi-key me-1"></i>
+			Este es el código para aprobar el crédito: <strong>{{ item.approval_code }}</strong>
 		</div>
+		{% endif %}
+		<table class="td-credit-table">
+			<tbody>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Valor del Crédito</td>
+					<td class="td-value">{{ item.initial_balance }}</td>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Saldo Actual</td>
+					<td class="td-value">{{ item.current_balance }}</td>
+				</tr>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">N° Cuotas</td>
+					<td class="td-value">{{ item.installment }}</td>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Valor Cuota</td>
+					<td class="td-value">{{ item.amount_installment }}</td>
+				</tr>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Cuotas Pagas</td>
+					<td class="td-value">{{ item.paid_installment }}</td>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Cuotas Adelantadas</td>
+					<td class="td-value">{{ item.advanced_installment }}</td>
+				</tr>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Cuotas en Mora</td>
+					<td class="td-value">{{ item.delay_installment }}</td>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Fecha Desembolso</td>
+					<td class="td-value">{{ item.created_at_date }}</td>
+				</tr>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Valor Último Abono</td>
+					<td class="td-value">{{ item.amount_last_payment|default_if_none:'' }}</td>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Fecha del Último Abono</td>
+					<td class="td-value">{{ item.last_payment|format_due_date }}</td>
+				</tr>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Fecha de Vencimiento</td>
+					<td class="td-value">
+						{% check_due_date item.due_date as is_overdue %}
+						{% if is_overdue %}
+							<strong class="text-danger">
+								<i class="bi bi-exclamation-triangle me-1"></i>
+								{{ item.due_date|format_due_date }} (vencido)
+							</strong>
+						{% else %}
+							<strong>{{ item.due_date|format_due_date }}</strong>
+						{% endif %}
+					</td>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Abonos</td>
+					<td class="td-value">
+						<a
+							href="#"
+							class="td-link"
+							data-bs-toggle="modal"
+							data-bs-target="#modal"
+							onclick="getPaymentCredit('{{SERVER}}', {{item.id}})"
+						>
+							<i class="bi bi-eye me-1"></i> Ver abonos
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="td-label" style="background:{{ item.company_color|default:'#1e3a5f' }};">Estado</td>
+					<td class="td-value" colspan="3">
+						{% if item.status == 10 %}
+							<span class="badge" style="background:#10b981; color:#fff; padding:0.35em 0.75em; border-radius:0.375rem; font-size:0.8rem;">
+								<i class="bi bi-check-circle me-1"></i>Activo
+							</span>
+						{% elif item.status == 50 %}
+							<span class="badge" style="background:#f59e0b; color:#fff; padding:0.35em 0.75em; border-radius:0.375rem; font-size:0.8rem;">
+								<i class="bi bi-clock me-1"></i>Pendiente
+							</span>
+						{% endif %}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	{% endfor %}
 </div>
 {% endif %}
-	
-<div class="modal fade" id="modalCreditRequest" tabindex="-1" aria-hidden="true" style="display: none;">
+
+<!-- Modal: Solicitud de Crédito -->
+<div class="modal fade" id="modalCreditRequest" tabindex="-1" aria-hidden="true">
 	<form action="{% url 'request_credit' %}" method="post">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-				<h5 class="modal-title">Solicitud de Crédito</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<h5 class="modal-title">
+						<i class="bi bi-send me-2"></i> Solicitud de Crédito
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 				</div>
 				<div class="modal-body">
-					<div class="row mb-2">
-						<div class="col-sm-12 text-justify">
-							Revise su número telefónico y modifíquelo si es necesario 
-							para que lo puedan contactar para verificar su solicitud. 
-							Luego presione el botón <i>Enviar</i>.
-						</div>
-					</div>
-					<div>		
-						{% csrf_token %}			
-						<input type="number" name="mobile_number" class="form-control" value="{{user.mobile_number}}" required>					
-					</div>
+					<p class="mb-3" style="font-size:0.9rem; color: var(--td-text-muted);">
+						Revise su número telefónico y modifíquelo si es necesario
+						para que lo puedan contactar para verificar su solicitud.
+						Luego presione el botón <strong>Enviar</strong>.
+					</p>
+					{% csrf_token %}
+					<label class="td-form-label" for="mobile_number">Número de teléfono</label>
+					<input
+						type="number"
+						name="mobile_number"
+						class="form-control td-form-control"
+						value="{{ user.mobile_number }}"
+						required
+					>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-					<button type="submit" class="btn btn-primary">Enviar</button>
+					<button type="button" class="btn td-btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn td-btn-primary">
+						<i class="bi bi-send me-1"></i> Enviar
+					</button>
 				</div>
 			</div>
 		</div>
 	</form>
 </div>
 
-<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+<!-- Modal: Historial de Abonos -->
+<div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Abonos realizados al crédito</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<h5 class="modal-title">
+					<i class="bi bi-receipt me-2"></i> Abonos realizados al crédito
+				</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 			</div>
 			<div class="modal-body">
-				<h5 class="d-none" id="creditWithoutPayment">No existen pagos para el crédito.</h5>
-
-				<div class="container text-center">
+				<h5 class="d-none" id="creditWithoutPayment" style="color: var(--td-text-muted); font-size: 0.95rem;">
+					<i class="bi bi-info-circle me-1"></i> No existen pagos para el crédito.
+				</h5>
+				<div class="table-responsive">
 					<table class="table table-sm" id="tableHistorialPayment">
-						<thead id="theadHistorialPayment">						
-						</thead>
-						<tbody id="tbodyHistorialPayment">							 
-						</tbody>
+						<thead id="theadHistorialPayment"></thead>
+						<tbody id="tbodyHistorialPayment"></tbody>
 					</table>
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn td-btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 			</div>
 		</div>
 	</div>
 </div>
 
+<!-- Modal: Mensaje de la empresa -->
 {% if not messages %}
 <div class="modal fade" id="modalCompanyMessage" tabindex="-1" aria-hidden="true">
 	<form action="{% url 'request_credit' %}" method="post">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-				<h5 class="modal-title">Información importante</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<h5 class="modal-title">
+						<i class="bi bi-megaphone me-2"></i> Información importante
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
 				</div>
 				<div class="modal-body">
-					<div class="row mb-2">
-						<div class="col-sm-12 text-justify">
-							Recuerde que no se hace negociaciones con el cobrador y que usted es el 
-							único responsable del crédito otorgado.
-							<br><br>
-							En caso de dudas, inquietudes o novedades que quiera reportar, 
-							comuníquese al teléfono:
-						</div>
-					</div>
-					<div>		
-						<p class="text-center">
-							<h6 class="text-center text-2xl"><strong>{{ user.office_phone_number }}</strong></h6>				
-						</p>
+					<p style="text-align:justify; font-size:0.9rem; color: var(--td-text-muted);">
+						Recuerde que no se hace negociaciones con el cobrador y que usted es el
+						único responsable del crédito otorgado.
+						<br><br>
+						En caso de dudas, inquietudes o novedades que quiera reportar,
+						comuníquese al teléfono:
+					</p>
+					<div class="text-center mt-3">
+						<span style="font-size:1.25rem; font-weight:700; color: var(--td-primary);">
+							<i class="bi bi-telephone me-1"></i>
+							{% if user.office_phone_number %}
+								{{ user.office_phone_number }}
+							{% else %}
+								Teléfono no disponible
+							{% endif %}
+						</span>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn td-btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 				</div>
 			</div>
 		</div>
