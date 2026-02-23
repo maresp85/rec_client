@@ -5,7 +5,7 @@ from django.urls import path, include
 from django.urls import re_path as url
 
 urlpatterns = [
-    path('go_admin/', admin.site.urls),
+    path('go-admin/', admin.site.urls),
     path('', include('clients.urls')),
     path('', include('users.urls')),
     url('', include('social_django.urls', namespace='social'))

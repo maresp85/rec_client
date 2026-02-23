@@ -21,8 +21,8 @@ def email_login(request):
 
 @csrf_exempt
 def custom_login(request):
-    if request.POST:       
-        form = CustomLoginForm(request.POST)       
+    if request.POST:
+        form = CustomLoginForm(request.POST)
         
         if form.is_valid(): 
             document_number = form.cleaned_data['document_number']
@@ -37,7 +37,7 @@ def custom_login(request):
                 
                 return HttpResponseRedirect('/credito/')
             
-            url = f'{settings.REC_SERVER}/validate_dni_digital_card/{document_number}/'        
+            url = f'{settings.REC_SERVER}/validate_dni_digital_card/{document_number}/'
             response = get_requests(url)
             
             if response.status_code == 200:
@@ -70,7 +70,7 @@ def custom_login(request):
                     return HttpResponseRedirect('/codigo-referido/')  
                                              
         else:            
-            return render(request, 'users/custom_login.html', { 'form': form })        
+            return render(request, 'users/custom_login.html', { 'form': form })
     
     return render(request, 'users/custom_login.html')
 
@@ -81,7 +81,7 @@ def reffered_code_view(request):
         
         if form.is_valid(): 
             referred_code = form.cleaned_data['referred_code']
-            url = f'{settings.REC_SERVER}/validate_referred_code_digital_card/{referred_code}/'        
+            url = f'{settings.REC_SERVER}/validate_referred_code_digital_card/{referred_code}/'
             response = get_requests(url)
           
             if response.status_code == 200:
@@ -104,7 +104,7 @@ def reffered_code_view(request):
             
             form.add_error('referred_code', 'El código de referido no existe')
           
-        return render(request, 'users/referral_code.html', { 'form': form })        
+        return render(request, 'users/referral_code.html', { 'form': form })
           
     return render(request, 'users/referral_code.html')
 
@@ -152,7 +152,7 @@ def create_user_view(
                 login(request, user)
                 return HttpResponseRedirect('/email-login/')
         else:  
-            return render(request, 'users/create_user.html', {'form': form})   
+            return render(request, 'users/create_user.html', {'form': form})
 
     return render(request, 'users/create_user.html', {'form': form})
 
