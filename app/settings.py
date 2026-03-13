@@ -187,3 +187,13 @@ SOCIAL_AUTH_GOOGLE_PLUS_SCOPE = [
 'https://www.googleapis.com/auth/userinfo.email',
 'https://www.googleapis.com/auth/userinfo.profile'
 ]
+
+# Email SMTP - Hostinger
+EMAIL_BACKEND = 'app.custom_email_backend.PatchedEmailBackend'
+EMAIL_HOST = 'smtp.titan.email'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'no-reply@tdelectrica.info'
+EMAIL_HOST_PASSWORD = 'V4quita2026+@#'
+DEFAULT_FROM_EMAIL = 'TD Eléctrica <no-reply@tdelectrica.info>'
+

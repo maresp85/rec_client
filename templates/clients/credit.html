@@ -37,10 +37,24 @@
 	{% for item in credit %}
 	<div class="mb-4">
 		{% if item.status == 50 %}
+		<!-- Alert oculto: código de aprobación directo -->
+		<!--
 		<div class="alert py-2 px-3 mb-2" style="background:#d1fae5; border:1px solid #6ee7b7; border-radius:0.5rem; color:#065f46; font-size:0.9rem;">
 			<i class="bi bi-key me-1"></i>
 			Este es el código para aprobar el crédito: <strong>{{ item.approval_code }}</strong>
 		</div>
+		-->
+		{% if email_sent %}
+		<div class="alert py-2 px-3 mb-2" style="background:#d1fae5; border:1px solid #6ee7b7; border-radius:0.5rem; color:#065f46; font-size:0.9rem;">
+			<i class="bi bi-envelope-check me-1"></i>
+			El código de activación de tu crédito fue enviado al correo <strong>{{ user.email }}</strong>
+		</div>
+		{% else %}
+		<div class="alert py-2 px-3 mb-2" style="background:#fef3c7; border:1px solid #fcd34d; border-radius:0.5rem; color:#92400e; font-size:0.9rem;">
+			<i class="bi bi-exclamation-triangle me-1"></i>
+			No se pudo enviar el código de activación al correo. Por favor contacte a su asesor.
+		</div>
+		{% endif %}
 		{% endif %}
 		<table class="td-credit-table">
 			<tbody>

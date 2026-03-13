@@ -6,6 +6,8 @@ from django.shortcuts import render
 from social_django.models import UserSocialAuth
 
 from app.utils import get_requests, post_requests
+from app.email_utils import send_approval_code_email
+from clients.models import ApprovalCodeEmailLog
 
 
 @login_required(login_url='/')
@@ -33,9 +35,43 @@ def get_credit(request):
 
     if response.status_code == 200:
         credit = response.json()
+        email_sent = False
+
+        # Enviar código de aprobación por correo para créditos pendientes
+        if request.user.email:
+            for item in credit:
+                if item.get('status') == 50 and item.get('approval_code'):
+                    credit_id = item.get('id')
+                    already_sent = ApprovalCodeEmailLog.objects.filter(
+                        user=request.user,
+                        credit_id=credit_id,
+                        success=True,
+                    ).exists()
+
+                    if not already_sent:
+                        sent = send_approval_code_email(
+                            user_email=request.user.email,
+                            user_name=request.user.full_name or request.user.first_name,
+                            approval_code=item['approval_code'],
+                            credit_value=str(item.get('initial_balance', '')),
+                        )
+                        ApprovalCodeEmailLog.objects.create(
+                            user=request.user,
+                            credit_id=credit_id,
+                            approval_code=item['approval_code'],
+                            credit_value=str(item.get('initial_balance', '')),
+                            email_to=request.user.email,
+                            success=sent,
+                        )
+                        if sent:
+                            email_sent = True
+                    else:
+                        email_sent = True
+
         context = {
             'credit': credit,
             'SERVER': settings.REC_SERVER,
+            'email_sent': email_sent,
         }
           
     return render(request, 'clients/credit.html', context)
